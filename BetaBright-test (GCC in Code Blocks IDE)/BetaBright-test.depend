@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1391164546 source:c:\gcc-projects\betabright-test\rs232.c
+	"rs232.h"
+
+1391164572 c:\gcc-projects\betabright-test\rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<windows.h>
+
