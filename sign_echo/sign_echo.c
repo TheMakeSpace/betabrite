@@ -40,39 +40,39 @@ static ctrl_code_t positions[] = {
 };
 
 static ctrl_code_t modes[] = {
-    {"rotate", MODE_ROTATE},
-    {"hold", MODE_HOLD},
-    {"flash", MODE_FLASH},
-    {"roll_up", MODE_ROLL_UP},
-    {"roll_down", MODE_ROLL_DOWN},
-    {"roll_left", MODE_ROLL_LEFT},
-    {"roll_right", MODE_ROLL_RIGHT},
-    {"wipe_up", MODE_WIPE_UP},
-    {"wipe_down", MODE_WIPE_DOWN},
-    {"wipe_left", MODE_WIPE_LEFT},
-    {"wipe_right", MODE_WIPE_RIGHT},
-    {"scroll", MODE_SCROLL},
-    {"automode", MODE_AUTOMODE},
-    {"roll_in", MODE_ROLL_IN},
-    {"roll_out", MODE_ROLL_OUT},
-    {"wipe_in", MODE_WIPE_IN},
-    {"wipe_out", MODE_WIPE_OUT},
-    {"compressed_rotate", MODE_COMPRESSED_ROTATE},
-    {"special", MODE_SPECIAL}
+    {"rotate",              MODE_ROTATE},
+    {"hold",                MODE_HOLD},
+    {"flash",               MODE_FLASH},
+    {"roll_up",             MODE_ROLL_UP},
+    {"roll_down",           MODE_ROLL_DOWN},
+    {"roll_left",           MODE_ROLL_LEFT},
+    {"roll_right",          MODE_ROLL_RIGHT},
+    {"wipe_up",             MODE_WIPE_UP},
+    {"wipe_down",           MODE_WIPE_DOWN},
+    {"wipe_left",           MODE_WIPE_LEFT},
+    {"wipe_right",          MODE_WIPE_RIGHT},
+    {"scroll",              MODE_SCROLL},
+    {"automode",            MODE_AUTOMODE},
+    {"roll_in",             MODE_ROLL_IN},
+    {"roll_out",            MODE_ROLL_OUT},
+    {"wipe_in",             MODE_WIPE_IN},
+    {"wipe_out",            MODE_WIPE_OUT},
+    {"compressed_rotate",   MODE_COMPRESSED_ROTATE},
+    {"special",             MODE_SPECIAL}
 };
 
 static ctrl_code_t special_modes[] = {
-    {"none", 0x00},
-    {"twinkle", SPECIAL_TWINKLE},
-    {"sparkle", SPECIAL_SPARKLE},
-    {"snow", SPECIAL_SNOW},
-    {"interlock", SPECIAL_INTERLOCK},
-    {"switch", SPECIAL_SWITCH},
-    {"slide", SPECIAL_SLIDE},
-    {"spray", SPECIAL_SPRAY},
-    {"starburst", SPECIAL_STARBURST},
-    {"script_welcome", SPECIAL_SCRIPT_WELCOME},
-    {"slot_machine", SPECIAL_SLOT_MACHINE}
+    {"none",            0x00},
+    {"twinkle",         SPECIAL_TWINKLE},
+    {"sparkle",         SPECIAL_SPARKLE},
+    {"snow",            SPECIAL_SNOW},
+    {"interlock",       SPECIAL_INTERLOCK},
+    {"switch",          SPECIAL_SWITCH},
+    {"slide",           SPECIAL_SLIDE},
+    {"spray",           SPECIAL_SPRAY},
+    {"starburst",       SPECIAL_STARBURST},
+    {"script_welcome",  SPECIAL_SCRIPT_WELCOME},
+    {"slot_machine",    SPECIAL_SLOT_MACHINE}
 };
 
 // command line options, set to defaults
@@ -248,7 +248,12 @@ int write_msg_to_sign(char *buffer, size_t len)
     // send null bytes to indicate new message
     RS232_SendBuf(port, (unsigned char *)&msg_begin, sizeof(msg_begin));
     RS232_SendBuf(port, (unsigned char *)&msg_begin, sizeof(msg_begin));
+    
+    // send transmission and message headers
+    RS232_SendBuf(port, (unsigned char *)&tx_hdr, sizeof(tx_hdr));
+    RS232_SendBuf(port, (unsigned char *)&msg_hdr, sizeof(msg_hdr));
 
+    // send special mode code if set as well as speed and color
     if (modes[msg_mode].value == MODE_SPECIAL) {
         RS232_SendByte(port, special_modes[msg_special_mode].value);
     }
@@ -256,10 +261,6 @@ int write_msg_to_sign(char *buffer, size_t len)
     RS232_SendByte(port, speeds[msg_speed].value);
     RS232_SendByte(port, CTRL_COLOR);
     RS232_SendByte(port, colors[msg_color].value);
-
-    // send transmission and message headers
-    RS232_SendBuf(port, (unsigned char *)&tx_hdr, sizeof(tx_hdr));
-    RS232_SendBuf(port, (unsigned char *)&msg_hdr, sizeof(msg_hdr));
 
     // send text
     RS232_SendBuf(port, (unsigned char *)buffer, len);
