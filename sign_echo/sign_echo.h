@@ -115,4 +115,16 @@ typedef struct {
     uint8_t display_pos;
     uint8_t mode_code;
 } alpha_msg_hdr_t;
+
+int get_ctrl_code_list_index(char *name, ctrl_code_t *list);
+void print_ctrl_code_list(FILE *fp, const char *prefix, ctrl_code_t *list);
+
+void print_usage(char *cmd_name);
+int parse_options(int argc, char **argv);
+
+void init_alpha_tx_hdr(alpha_tx_hdr_t *hdr);
+void init_alpha_msg_hdr(alpha_msg_hdr_t *hdr);
+
+int write_msg_to_sign(char *buffer, size_t len);
+
 #endif
