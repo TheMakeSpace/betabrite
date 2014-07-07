@@ -262,11 +262,16 @@ int write_msg_to_sign(char *buffer, size_t len)
     // send null bytes to indicate new message
     RS232_SendBuf(port, (unsigned char *)&msg_begin, sizeof(msg_begin));
     RS232_SendBuf(port, (unsigned char *)&msg_begin, sizeof(msg_begin));
+    
+    // send transmission and message headers
+    RS232_SendBuf(port, (unsigned char *)&tx_hdr, sizeof(tx_hdr));
+    RS232_SendBuf(port, (unsigned char *)&msg_hdr, sizeof(msg_hdr));
 
     // send transmission and message headers
     RS232_SendBuf(port, (unsigned char *)&tx_hdr, sizeof(tx_hdr));
     RS232_SendBuf(port, (unsigned char *)&msg_hdr, sizeof(msg_hdr));
 
+    // send special mode code if set as well as speed and color
     if (modes[msg_mode].value == MODE_SPECIAL) {
         RS232_SendByte(port, special_modes[msg_special_mode].value);
     }
